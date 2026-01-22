@@ -1,35 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import Navbar from "@/components/Navbar"
 import BlogHeader from "@/components/BlogHeader"
 import Footer from "@/components/Footer"
 import FontLoader from "@/components/FontLoader"
-import { siteServiceApi, type SiteData } from "@/services/api/siteServiceApi"
+import { useSiteData } from "@/contexts/SiteDataContext"
 
 export default function HomePage() {
-  const [siteData, setSiteData] = useState<SiteData | null>(null)
-
-  useEffect(() => {
-    const fetchSiteData = async () => {
-      try {
-        const response = await siteServiceApi.getSiteData()
-        if (response.status) {
-          setSiteData(response.data)
-        }
-      } catch (error) {
-        console.error("Failed to fetch site data:", error)
-      } finally {
-        
-      }
-    }
-
-    fetchSiteData()
-  }, [])
+  const { siteData } = useSiteData()
 
   const fontFamily = siteData?.configs?.font_family || "sans-serif"
-
-  console.log(fontFamily);
 
   return (
     <>

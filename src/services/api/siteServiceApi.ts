@@ -1,5 +1,4 @@
-const API_BASE_URL =
-    process.env.NEXT_PUBLIC_SITE_URL_API || "https://api.sheet.microgem.io.vn/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_SITE_URL_API;
 
 export interface SiteInformation {
     property: string;
@@ -132,11 +131,14 @@ class SiteServiceApi {
     private baseUrl: string;
 
     constructor() {
-        this.baseUrl = API_BASE_URL;
+        if (!API_BASE_URL) {
+            throw new Error("API_BASE_URL is not defined");
+        }
+        this.baseUrl = API_BASE_URL as string;
     }
 
     getSiteInfoByCode(siteInfos: SiteInformation[] | undefined, code: string): string {
-        if (!Array.isArray(siteInfos)) return "";
+        if (!siteInfos || !Array.isArray(siteInfos)) return "";
         const info = siteInfos.find((item) => item.code === code);
         return info?.value || "";
     }
