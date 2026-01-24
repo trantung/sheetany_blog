@@ -1,12 +1,17 @@
 "use client"
 
 import Link from "next/link"
+import { useState } from "react"
 import { Twitter, Linkedin, Facebook, Instagram } from "lucide-react"
+
 import { siteServiceApi } from "@/services/api/siteServiceApi"
 import { useSiteData } from "@/contexts/SiteDataContext"
 
 export default function Footer() {
   const { siteData, loading } = useSiteData()
+  const [email, setEmail] = useState("")
+  const [subscriptionStatus, setSubscriptionStatus] = useState<"idle" | "success" | "error">("idle")
+
 
   // Hide footer if configured
   if (typeof siteData?.configs === "object" && siteData.configs?.hide_footer == 2) {
@@ -46,6 +51,25 @@ export default function Footer() {
   const instagramUrl = getSiteInfo("instagram_url")
   // const threadsUrl = getSiteInfo("threads_url")
 
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email) return
+
+    try {
+      setSubscriptionStatus("idle")
+      const result = await siteServiceApi.subscribeEmail(email)
+      if (result.success) {
+        setSubscriptionStatus("success")
+        setEmail("")
+      } else {
+        setSubscriptionStatus("error")
+      }
+    } catch (error) {
+      setSubscriptionStatus("error")
+      console.error("Subscription error:", error)
+    }
+  }
+
   return (
     <footer className="!bg-white !border-t !border-gray-200 !mt-16">
       <div className="!max-w-7xl !mx-auto !px-4 !sm:!px-6 !lg:!px-8 !py-12">
@@ -54,16 +78,37 @@ export default function Footer() {
           <h3 className="!text-center !text-2xl !font-bold !text-gray-900 !mb-2 !p-0">{emailSubscriptionTitle}</h3>
           <p className="!text-center !text-gray-600 !mb-6">{emailSubscriptionSubtitle}</p>
 
-          <div className="!flex !max-w-2xl !mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email address..."
-              className="!flex-1 !px-4 !py-2 !border !border-gray-300 !rounded-l-lg !focus:outline-none !focus:ring-1 !focus:ring-green-500 !focus:border-green-500"
-            />
-            <button className="!bg-green-500 !hover:bg-green-600 !text-white !px-6 !py-2 !rounded-r-lg !transition-colors">
-              {emailSubscriptionButton} →
-            </button>
+          <div className="!mt-5">
+            {subscriptionStatus === "success" && (
+              <label className="!block">
+                <label className="!text-green-600">Subscribed!</label>
+              </label>
+            )}
+            {subscriptionStatus === "error" && (
+              <label className="!block">
+                <label className="!text-red-500">Something went wrong. Please try again.</label>
+              </label>
+            )}
           </div>
+
+          <form onSubmit={handleSubscribe} className="!mt-5">
+            <div className="!flex !max-w-2xl !mx-auto">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email address..."
+                className="!flex-1 !px-4 !py-2 !border !border-gray-300 !rounded-l-lg !focus:outline-none !focus:ring-1 !focus:ring-green-500 !focus:border-green-500"
+                required
+              />
+              <button
+                type="submit"
+                className="!bg-green-500 !hover:bg-green-600 !text-white !px-6 !py-2 !rounded-r-lg !transition-colors"
+              >
+                {emailSubscriptionButton} →
+              </button>
+            </div>
+          </form>
         </div>
 
         {/* Footer Bottom */}
