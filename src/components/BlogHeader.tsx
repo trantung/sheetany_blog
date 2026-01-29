@@ -38,24 +38,38 @@ export default function BlogHeader() {
 
   return (
     <div className="mb-12">
-      {/* Blog Title and Description */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">{titlePage}</h1>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">{subtitlePage}</p>
+      {/* Blog Title and Description (Hero Section) */}
+      <div className="block main-hero px-4 mt-10">
+        <div className="block w-full max-w-7xl mx-auto py-10 lg:py-20 text-left">
+          <div className="block max-w-4xl">
+            <h1 className="lg:text-6xl font-bold block text-4xl dark:text-white text-slate-900">
+              {titlePage}
+            </h1>
+            <h2 className="text-xl block mt-4 text-slate-500 dark:text-navy-300">
+              {subtitlePage}
+            </h2>
+          </div>
+        </div>
       </div>
 
       {/* Filters and Search */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
-        <CategoryFilter
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          siteData={siteData}
-        />
-        <SearchBox searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <div className="block block-filter mt-10 px-4">
+        <div className="block max-w-7xl mx-auto all-categories flex flex-col lg:flex-row justify-between items-start gap-4 w-full">
+          <CategoryFilter
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            siteData={siteData}
+          />
+          <SearchBox searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        </div>
       </div>
 
       {/* Post List */}
-      <PostList selectedCategory={selectedCategory} searchQuery={debouncedSearchQuery} siteData={siteData} />
+      <div className="block block-content mt-10 px-4">
+        <div className="block max-w-7xl mx-auto all-posts">
+          <PostList selectedCategory={selectedCategory} searchQuery={debouncedSearchQuery} siteData={siteData} />
+        </div>
+      </div>
     </div>
   )
 }

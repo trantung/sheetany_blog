@@ -31,16 +31,15 @@ export default function CategoryFilter({ selectedCategory, onCategoryChange, sit
   const categories = [allCategoriesText, ...siteData.categories.map((cat) => cat.category_name)]
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="block flex flex-wrap gap-2">
       {categories.map((category) => (
         <button
           key={category}
           onClick={() => onCategoryChange(category)}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-            selectedCategory === category
-              ? "bg-green-100 text-green-800 border border-green-200"
-              : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
-          }`}
+          className={`btn px-3 font-medium rounded-full transition-colors ${selectedCategory === category
+              ? "bg-slate-150 dark:bg-navy-500 text-slate-900 dark:text-navy-100"
+              : "hover:bg-slate-300/20 dark:hover:bg-navy-300/20 text-slate-700 dark:text-navy-100"
+            }`}
         >
           {category}
         </button>

@@ -104,15 +104,21 @@ export default function PostList({ selectedCategory, searchQuery, siteData }: Po
   const gridColsClass = useMemo(() => {
     const cols = siteData?.configs?.grid_content || 3
 
-    // Tối đa 6 cột, tối thiểu 1
-    const safeCols = Math.min(Math.max(cols, 1), 6)
+    const map: Record<number, string> = {
+      1: "lg:grid-cols-1",
+      2: "lg:grid-cols-2",
+      3: "lg:grid-cols-3",
+      4: "lg:grid-cols-4",
+      5: "lg:grid-cols-5",
+      6: "lg:grid-cols-6",
+    }
 
-    return `grid-cols-1 md:grid-cols-2 lg:grid-cols-${safeCols}`
+    return `grid-cols-1 md:grid-cols-2 ${map[cols] || "lg:grid-cols-3"}`
   }, [siteData])
 
   return (
-    <div>
-      <div className={`grid ${gridColsClass} gap-8 mb-12`}>
+    <div className="block block-content mt-10">
+      <div className={`grid ${gridColsClass} gap-12 mb-12 grid-all-posts`}>
         {loadingSearch ? (
           [...Array(6)].map((_, i) => (
             <div key={i} className="animate-pulse">
@@ -128,12 +134,17 @@ export default function PostList({ selectedCategory, searchQuery, siteData }: Po
       </div>
 
       {!loadingSearch && hasMorePosts && (
-        <div className="text-center">
+        <div className="block block-pagination mt-20 text-center">
           <button
             onClick={loadMore}
-            className="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+            className="btn border space-x-1 border-slate-300 font-medium text-slate-800 hover:bg-slate-150 dark:border-navy-450 dark:text-navy-50 dark:hover:bg-navy-500 py-3 px-6 rounded-lg flex items-center mx-auto"
           >
-            {loadMoreText} ↓
+            <span>{loadMoreText}</span>
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19.5 8.25-7.5 7.5-7.5-7.5"></path>
+              </svg>
+            </span>
           </button>
         </div>
       )}
