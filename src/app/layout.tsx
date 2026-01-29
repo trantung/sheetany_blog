@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-function SiteWrapper({ children }: { children: React.ReactNode }) {
-  const { siteData, loading } = useSiteData();
+function HeadManager() {
+  const { siteData } = useSiteData();
 
   const getSiteInfo = (code: string) => {
     return siteServiceApi.getSiteInfoByCode(siteData?.site_informations || [], code);
@@ -35,17 +35,21 @@ function SiteWrapper({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (siteFavicon) {
-      let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
-      if (!link) {
-        link = document.createElement("link");
-        link.rel = "icon";
-        document.getElementsByTagName("head")[0].appendChild(link);
-      }
-      link.href = siteFavicon;
+      // Manage all icon rels: icon, shortcut icon, apple-touch-icon
+      const rels = ["icon", "shortcut icon", "apple-touch-icon"];
+      rels.forEach(rel => {
+        let link = document.querySelector(`link[rel*='${rel}']`) as HTMLLinkElement;
+        if (!link) {
+          link = document.createElement("link");
+          link.rel = rel;
+          document.head.appendChild(link);
+        }
+        link.href = siteFavicon;
+      });
     }
   }, [siteFavicon]);
 
-  return <>{children}</>;
+  return null;
 }
 
 export default function RootLayout({
@@ -59,9 +63,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SiteDataProvider>
-          <SiteWrapper>
-            {children}
-          </SiteWrapper>
+          <HeadManager />
+          {children}
         </SiteDataProvider>
       </body>
     </html>

@@ -6,7 +6,8 @@ import Link from "next/link"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import TableOfContents from "@/components/TableOfContents"
-import { siteServiceApi, type ProductDetailResponse, type SiteData } from "@/services/api/siteServiceApi"
+import { siteServiceApi, type ProductDetailResponse } from "@/services/api/siteServiceApi"
+import { useSiteData } from "@/contexts/SiteDataContext"
 import * as cheerio from "cheerio"
 import { Element } from "domhandler";
 
@@ -18,7 +19,6 @@ interface Heading {
 
 interface BlogPostClientProps {
   slug: string
-  initialSiteData: SiteData | null
 }
 
 async function fetchGoogleDocsContent(url: string): Promise<string> {
@@ -101,7 +101,8 @@ function parseContentAndExtractHeadings(content: string): {
   };
 }
 
-export default function BlogPostClient({ slug, initialSiteData }: BlogPostClientProps) {
+export default function BlogPostClient({ slug }: BlogPostClientProps) {
+  const { siteData } = useSiteData()
   const [productDetail, setProductDetail] = useState<ProductDetailResponse | null>(null)
   const [htmlContent, setHtmlContent] = useState<string>("")
   const [headings, setHeadings] = useState<Heading[]>([])
@@ -148,7 +149,7 @@ export default function BlogPostClient({ slug, initialSiteData }: BlogPostClient
   }
 
   const getSiteInfo = (code: string) => {
-    return siteServiceApi.getSiteInfoByCode(initialSiteData?.site_informations || [], code)
+    return siteServiceApi.getSiteInfoByCode(siteData?.site_informations || [], code)
   }
 
   const relatedPostsTitle = getSiteInfo("related_posts") || 'Related posts'
