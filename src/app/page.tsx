@@ -2,6 +2,7 @@
 
 import Navbar from "@/components/Navbar"
 import BlogHeader from "@/components/BlogHeader"
+import Newsletter from "@/components/Newsletter"
 import Footer from "@/components/Footer"
 import FontLoader from "@/components/FontLoader"
 import { useSiteData } from "@/contexts/SiteDataContext"
@@ -15,11 +16,10 @@ export default function HomePage() {
     <>
       <FontLoader fontFamily={fontFamily} />
 
-      <div className="min-h-screen bg-gray-50" style={{ fontFamily }}>
+      <div className="12323 block main-blog-app w-full bg-white dark:bg-navy-900 dark:text-navy-100 text-slate-900 text-base min-h-screen" style={{ fontFamily }}>
         <Navbar />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <BlogHeader />
-        </main>
+        <BlogHeader />
+        <Newsletter />
         <Footer />
       </div>
     </>

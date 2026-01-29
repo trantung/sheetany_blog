@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
 import { Twitter, Linkedin, Facebook, Instagram } from "lucide-react"
 
 import { siteServiceApi } from "@/services/api/siteServiceApi"
@@ -9,9 +8,6 @@ import { useSiteData } from "@/contexts/SiteDataContext"
 
 export default function Footer() {
   const { siteData, loading } = useSiteData()
-  const [email, setEmail] = useState("")
-  const [subscriptionStatus, setSubscriptionStatus] = useState<"idle" | "success" | "error">("idle")
-
 
   // Hide footer if configured
   if (typeof siteData?.configs === "object" && siteData.configs?.hide_footer == 2) {
@@ -20,12 +16,14 @@ export default function Footer() {
 
   if (loading) {
     return (
-      <footer className="bg-white border-t border-gray-200 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center animate-pulse">
-            <div className="h-8 bg-gray-300 rounded w-48 mx-auto mb-4"></div>
-            <div className="h-6 bg-gray-300 rounded w-64 mx-auto mb-6"></div>
-            <div className="h-10 bg-gray-300 rounded w-80 mx-auto"></div>
+      <footer className="mt-20">
+        <div className="block block-footer mt-10 px-4">
+          <div className="block max-w-screen-lg mx-auto items-center py-10">
+            <div className="text-center animate-pulse">
+              <div className="h-8 bg-gray-300 rounded w-48 mx-auto mb-4"></div>
+              <div className="h-6 bg-gray-300 rounded w-64 mx-auto mb-6"></div>
+              <div className="h-10 bg-gray-300 rounded w-80 mx-auto"></div>
+            </div>
           </div>
         </div>
       </footer>
@@ -38,10 +36,6 @@ export default function Footer() {
 
   const siteName = getSiteInfo("site_name") || "Sheetany"
   const siteLogo = getSiteInfo("site_logo")
-  const emailSubscriptionTitle = getSiteInfo("email_subscription_title") || "Follow the Journey"
-  const emailSubscriptionSubtitle =
-    getSiteInfo("email_subscription_subtitle") || "Receive a daily digest of the newest startups"
-  const emailSubscriptionButton = getSiteInfo("email_subscription_button") || "Subscribe to newsletter"
   const footerCopyright = getSiteInfo("footer_copyright") || "© 2024 Sheetany Blog - All Rights Reserved"
 
   // Social links
@@ -49,111 +43,64 @@ export default function Footer() {
   const twitterUrl = getSiteInfo("twitter_url")
   const linkedinUrl = getSiteInfo("linkedin_url")
   const instagramUrl = getSiteInfo("instagram_url")
-  // const threadsUrl = getSiteInfo("threads_url")
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email) return
-
-    try {
-      setSubscriptionStatus("idle")
-      const result = await siteServiceApi.subscribeEmail(email)
-      if (result.success) {
-        setSubscriptionStatus("success")
-        setEmail("")
-      } else {
-        setSubscriptionStatus("error")
-      }
-    } catch (error) {
-      setSubscriptionStatus("error")
-      console.error("Subscription error:", error)
-    }
-  }
 
   return (
-    <footer className="!bg-white !border-t !border-gray-200 !mt-16">
-      <div className="!max-w-7xl !mx-auto !px-4 !sm:!px-6 !lg:!px-8 !py-12">
-        {/* Newsletter Section */}
-        <div className="!text-center !mb-12">
-          <h3 className="!text-center !text-2xl !font-bold !text-gray-900 !mb-2 !p-0">{emailSubscriptionTitle}</h3>
-          <p className="!text-center !text-gray-600 !mb-6">{emailSubscriptionSubtitle}</p>
-
-          <div className="!mt-5">
-            {subscriptionStatus === "success" && (
-              <label className="!block">
-                <label className="!text-green-600">Subscribed!</label>
-              </label>
-            )}
-            {subscriptionStatus === "error" && (
-              <label className="!block">
-                <label className="!text-red-500">Something went wrong. Please try again.</label>
-              </label>
-            )}
-          </div>
-
-          <form onSubmit={handleSubscribe} className="!mt-5">
-            <div className="!flex !max-w-2xl !mx-auto">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address..."
-                className="!flex-1 !px-4 !py-2 !border !border-gray-300 !rounded-l-lg !focus:outline-none !focus:ring-1 !focus:ring-green-500 !focus:border-green-500"
-                required
-              />
-              <button
-                type="submit"
-                className="!bg-green-500 !hover:bg-green-600 !text-white !px-6 !py-2 !rounded-r-lg !transition-colors"
-              >
-                {emailSubscriptionButton} →
-              </button>
-            </div>
-          </form>
-        </div>
-
-        {/* Footer Bottom */}
-        <div className="!flex !flex-col !items-center !space-y-4">
-          {/* Logo */}
-          <Link href="/" className="!flex !items-center !space-x-2">
+    <div className="block block-footer py-10 px-4">
+      <div className="block max-w-screen-lg mx-auto items-center py-10">
+        <div className="block flex flex-col items-center">
+          <Link href="/" className="flex items-center space-x-2">
             {siteLogo ? (
-              <img src={siteLogo || "/placeholder.svg"} alt={siteName} className="!w-8 !h-8 !rounded-full" />
+              <img src={siteLogo || "/placeholder.svg"} alt={siteName} className="w-8 h-8 rounded-full" />
             ) : (
-              <div className="!w-8 !h-8 !bg-green-500 !rounded-full !flex !items-center !justify-center">
-                <span className="!text-white !font-bold !text-sm">{siteName.charAt(0)}</span>
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-sm">{siteName.charAt(0)}</span>
               </div>
             )}
-            <span className="!text-xl !font-semibold !text-gray-900">{siteName}</span>
+            <div>
+              <p className="font-semibold text-xl line-clamp-1" style={{ color: "#0F9D60" }}>
+                {siteName}
+              </p>
+            </div>
           </Link>
+        </div>
 
-          {/* Social Links */}
-          <div className="!flex !space-x-4">
+        <div className="block footer-social-links mt-5">
+          <ul className="flex flex-wrap items-center justify-center gap-6 text-slate-600 dark:text-navy-300">
             {twitterUrl && (
-              <Link href={twitterUrl} className="!text-gray-400 !hover:text-gray-600 !transition-colors">
-                <Twitter className="!w-5 !h-5" />
-              </Link>
+              <li>
+                <Link href={twitterUrl} target="_blank">
+                  <Twitter className="h-5 w-5" />
+                </Link>
+              </li>
             )}
             {linkedinUrl && (
-              <Link href={linkedinUrl} className="!text-gray-400 !hover:text-gray-600 !transition-colors">
-                <Linkedin className="!w-5 !h-5" />
-              </Link>
+              <li>
+                <Link href={linkedinUrl} target="_blank">
+                  <Linkedin className="h-5 w-5" />
+                </Link>
+              </li>
             )}
             {facebookUrl && (
-              <Link href={facebookUrl} className="!text-gray-400 !hover:text-gray-600 !transition-colors">
-                <Facebook className="!w-5 !h-5" />
-              </Link>
+              <li>
+                <Link href={facebookUrl} target="_blank">
+                  <Facebook className="h-5 w-5" />
+                </Link>
+              </li>
             )}
             {instagramUrl && (
-              <Link href={instagramUrl} className="!text-gray-400 !hover:text-gray-600 !transition-colors">
-                <Instagram className="!w-5 !h-5" />
-              </Link>
+              <li>
+                <Link href={instagramUrl} target="_blank">
+                  <Instagram className="h-5 w-5" />
+                </Link>
+              </li>
             )}
-          </div>
+          </ul>
+        </div>
 
-          {/* Copyright */}
-          <p className="!text-sm !text-gray-500">{footerCopyright}</p>
+        <div className="block flex flex-wrap items-center justify-center mt-5">
+          <span className="text-xs+ text-slate-500 dark:text-navy-300">{footerCopyright}</span>
         </div>
       </div>
-    </footer>
-
+    </div>
   )
 }

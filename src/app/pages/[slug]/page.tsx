@@ -11,7 +11,7 @@ interface Heading {
 }
 
 interface PageProps {
-  params: Promise<{ slug: string }>
+    params: Promise<{ slug: string }>
 }
 
 async function fetchGoogleDocsContent(url: string): Promise<string> {

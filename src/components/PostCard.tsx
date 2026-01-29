@@ -1,5 +1,4 @@
 // import Image from "next/image"
-import Link from "next/link"
 
 interface Post {
   id: number
@@ -18,37 +17,42 @@ interface PostCardProps {
 
 export default function PostCard({ post }: PostCardProps) {
   return (
-    <article className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden group">
-      <Link href={`/blog/${post.slug}`}>
-        <div className="relative h-48 overflow-hidden">
-          <img
-            src={post.image || "/placeholder.svg"}
-            alt={post.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-
-        <div className="p-6">
-          <div className="flex items-center text-sm text-gray-500 mb-3">
-            <span className="font-medium">{post.author}</span>
-            <span className="mx-2">•</span>
-            <span>{post.date}</span>
+    <a href={`/blog/${post.slug}`} className="block grid-one-post group">
+      <div className="block">
+        <img
+          src={post.image || "/placeholder.svg"}
+          alt={post.title}
+          className="h-48 w-full object-cover object-center rounded-lg shadow-lg bg-slate-100 dark:bg-navy-500 transition-transform duration-300"
+        />
+        <div className="block flex grow flex-col mt-4">
+          <div className="flex items-center">
+            <div className="block flex space-x-2 justify-start items-center">
+              <div className="block block-author">
+                <span className="text-sm font-medium text-slate-900 dark:text-navy-100">{post.author}</span>
+              </div>
+            </div>
+            <div className="mx-2 text-slate-500">·</div>
+            <div className="block">
+              <span className="text-xs+ text-slate-500 dark:text-navy-300">{post.date}</span>
+            </div>
           </div>
-
-          <h2 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-green-600 transition-colors line-clamp-2">
-            {post.title}
-          </h2>
-
-          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">{post.description}</p>
-
-          <div className="flex items-center justify-between">
-            <span className="inline-block px-3 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">
+          <div className="block mt-2 line-clamp-2">
+            <span className="article-title text-xl font-bold tracking-tight text-slate-900 dark:text-navy-100 transition-colors">
+              {post.title}
+            </span>
+          </div>
+          <p className="block blog-except article-excerpt text-base mt-2">
+            <span className="line-clamp-3 text-slate-500 dark:text-navy-300">
+              {post.description}
+            </span>
+          </p>
+          <div className="mt-2 text-left text-xs+ flex flex-wrap gap-2">
+            <span className="badge rounded-full bg-slate-150 text-slate-800 dark:bg-navy-500 dark:text-navy-100 px-3 py-1 font-medium">
               {post.category}
             </span>
-            <span className="text-green-600 text-sm font-medium group-hover:underline">Read more →</span>
           </div>
         </div>
-      </Link>
-    </article>
+      </div>
+    </a>
   )
 }

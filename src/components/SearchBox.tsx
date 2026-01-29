@@ -9,17 +9,19 @@ interface SearchBoxProps {
 
 export default function SearchBox({ searchQuery, onSearchChange }: SearchBoxProps) {
   return (
-    <div className="relative">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <Search className="h-5 w-5 text-gray-400" />
+    <div className="block block-search">
+      <div className="relative flex">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          className="form-input h-10 font-medium peer bg-transparent rounded-lg border border-slate-300 dark:border-navy-450 px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-slate-500 dark:text-navy-100"
+        />
+        <div className="cursor-pointer hover:text-slate-800 absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:border-slate-500">
+          <Search className="h-5 w-5 transition-colors duration-200" />
+        </div>
       </div>
-      <input
-        type="text"
-        placeholder="Search..."
-        value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
-        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-green-500 focus:border-green-500"
-      />
     </div>
   )
 }
